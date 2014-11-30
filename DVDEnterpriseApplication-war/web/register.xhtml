@@ -27,12 +27,13 @@ and open the template in the editor.
     </h:form>
     
     <h:form rendered="#{userManagedBean.user==null}">
+        Email <h:inputText value="#{userManagedBean.email}"/> <br/>
         Username: <h:inputText value="#{userManagedBean.username}"/> <br/>
         Password: <h:inputSecret value="#{userManagedBean.password}"/> <br/>
-        <h:commandButton value="Login" action="#{userManagedBean.login}"/>
+        <h:commandButton value="Register" action="#{userManagedBean.register}"/>
     </h:form>
     <br/><br/>
-    <h2><h:link outcome="register" value="Sign Up"/></h2>
+    <h2><h:link outcome="login" value="Sign In"/></h2>
 </h:body>
 
 </html>

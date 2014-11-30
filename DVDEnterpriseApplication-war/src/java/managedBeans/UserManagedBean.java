@@ -21,6 +21,7 @@ public class UserManagedBean implements Serializable{
     private String username;
     private String password;
     private String message;
+    private String email;
     final int USER_ROLE = 0;
     final int ADMIN_ROLE = 1;
     
@@ -46,6 +47,7 @@ public class UserManagedBean implements Serializable{
             return null;
         } else {
             User newUser = new User();
+            newUser.setEmail(email);
             newUser.setUsername(username);
             newUser.setPassword(password);
             newUser.setRole(USER_ROLE);
@@ -95,6 +97,12 @@ public class UserManagedBean implements Serializable{
     }
     public void setUsername(String username) {
         this.username = username;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
     }
     public String getPassword() {
         return password;

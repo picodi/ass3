@@ -40,7 +40,11 @@ public class UserSessionBean implements UserSessionBeanLocal
     
     @Override
     public User getUserByUsername(String username) {
-        return (User)em.createNamedQuery("User.findByUsername").setParameter("username", username).getResultList().get(0);
+        try{
+            return (User)em.createNamedQuery("User.findByUsername").setParameter("username", username).getSingleResult();
+        } catch (Exception e){
+            return null;
+        }
     }
 
     @Override
