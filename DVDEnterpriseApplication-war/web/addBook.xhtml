@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<f:view>
+    <ui:insert name="metadata"/>
+    <f:event type="preRenderView" listener="#{userManagedBean.secure}" />    
+
+<h:head>
+    <title>AddBook</title>
+</h:head>
+
+<h:body>
+    <h1>Add new book</h1>
+    <h:form>
+        <h:commandButton value="Logout" action="#{userManagedBean.logOut}"/>
+    </h:form>
+
+    <h:outputLabel value="#{bookManagedBean.message}"/><br/><br/>
+
+    <h:form>
+        Title: <h:inputText value="#{bookManagedBean.title}"/><br/>
+        Author: <h:inputText value="#{bookManagedBean.author}"/><br/>
+        Quantity: <h:inputText value="#{bookManagedBean.quantity}"/><br/>
+        Price: <h:inputText value="#{bookManagedBean.price}"/><br/>
+        <h:commandButton value="Add Book" action="#{bookManagedBean.add}"/>
+    </h:form>
+
+    <h2>Go to your <h:link outcome="adminView" value="admin page"> </h:link></h2>
+
+</h:body>
+
+</f:view>
+    
+</html>

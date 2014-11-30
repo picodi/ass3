@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<f:view>
+    <ui:insert name="metadata"/>
+    <f:event type="preRenderView" listener="#{userManagedBean.secure}" />    
+    
+<h:head>
+    <title>Books</title>
+</h:head>
+
+<h:body>
+    
+    #{bookManagedBean.loadBooks()}
+    
+    <h:form>
+        <h:commandButton value="Logout" action="#{userManagedBean.logOut}"/>
+    </h:form>
+
+    <h2>Books page</h2>
+
+    <h2><h:link outcome="addBook" value="Add a new book"/></h2>
+
+    <h2>#{bookManagedBean.message}</h2>
+
+    <h:form>
+        <h:dataTable value="#{bookManagedBean.books}" var="bo">
+            <h:column>
+                <f:facet name="header">Title</f:facet>
+                <h:inputText value="#{bookManagedBean.title}" rendered="#{bookManagedBean.isEditable(bo.id)}"/>
+                <h:outputText value="#{bo.title}" rendered="#{not bookManagedBean.isEditable(bo.id)}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Author</f:facet>
+                <h:inputText value="#{bookManagedBean.author}" rendered="#{bookManagedBean.isEditable(bo.id)}"/>
+                <h:outputText value="#{bo.author}" rendered="#{not bookManagedBean.isEditable(bo.id)}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Quantity</f:facet>
+                <h:inputText value="#{bookManagedBean.quantity}" rendered="#{bookManagedBean.isEditable(bo.id)}"/>
+                <h:outputText value="#{bo.quantity}" rendered="#{not bookManagedBean.isEditable(bo.id)}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Price</f:facet>
+                <h:inputText value="#{bookManagedBean.price}" rendered="#{bookManagedBean.isEditable(bo.id)}"/>
+                <h:outputText value="#{bo.price}" rendered="#{not bookManagedBean.isEditable(bo.id)}"/>
+            </h:column>
+            <h:column rendered="#{not bookManagedBean.isEditable(bo.id)}">
+                <f:facet name="header">Edit</f:facet>
+                <h:commandButton value="edit" action="#{bookManagedBean.setEditable(bo.id)}" rendered="#{not bookManagedBean.isEditable(bo.id)}"/>
+                <h:commandButton value="save" action="#{bookManagedBean.edit(bo.id)}" rendered="#{bookManagedBean.isEditable(bo.id)}"/>
+            </h:column>
+            <h:column rendered="#{not bookManagedBean.isEditable(bo.id)}">
+                <f:facet name="header">Delete</f:facet>
+                <h:commandButton value="delete" action="#{bookManagedBean.delete(bo.id)}">  </h:commandButton>
+            </h:column>
+        </h:dataTable>
+    </h:form>
+
+</h:body>
+
+</f:view>    
+    
+</html>

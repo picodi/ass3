@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+    <title>Books</title>
+</h:head>
+
+<h:body>
+    
+    <h:form>
+        <h:commandButton value="Logout" action="#{userManagedBean.logOut}"/>
+    </h:form>
+    
+    #{cartManagedBean.loadCart(userManagedBean.user.id)}
+
+    <h2>My Cart</h2>
+
+    <h:form>
+         <h:commandButton value="Clear Messages" action="#{cartManagedBean.clearMessage()}">  </h:commandButton>
+    </h:form>
+    <h2>#{cartManagedBean.message}</h2>
+    
+    <h2><h:link outcome="userView" value="Add a new book"/></h2>
+
+
+    <h:form>
+        <h:dataTable value="#{cartManagedBean.carts}" var="cart">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{cart.id}" />
+            </h:column>
+            <h:column>
+                <f:facet name="header">Title</f:facet>
+                <h:outputText value="#{bookManagedBean.getBook(cart.bookId).title}" />
+            </h:column>
+            <h:column>
+                <f:facet name="header">Author</f:facet>
+                <h:outputText value="#{bookManagedBean.getBook(cart.bookId).author}" />
+            </h:column>
+            <h:column>
+                <f:facet name="header">Quantity</f:facet>
+                <h:inputText value="#{cart.quantity}" rendered="#{cartManagedBean.isEditable(cart.id)}"/>
+                <h:outputText value="#{cart.quantity}" rendered="#{not cartManagedBean.isEditable(cart.id)}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Price</f:facet>
+                <h:outputText value="#{bookManagedBean.getBook(cart.bookId).price * cart.quantity}" />
+            </h:column>
+            <h:column>
+                <f:facet name="header">Edit</f:facet>
+                <h:commandButton value="edit" action="#{cartManagedBean.setEditable(cart.id)}" rendered="#{not cartManagedBean.isEditable(cart.id)}"/>
+                <h:commandButton value="save" action="#{cartManagedBean.edit(cart.id, userManagedBean.user.id)}" rendered="#{cartManagedBean.isEditable(cart.id)}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Delete</f:facet>
+                <h:commandButton value="delete" action="#{cartManagedBean.delete(cart.id, userManagedBean.user.id)}">  </h:commandButton>
+            </h:column>
+        </h:dataTable>
+        <h:commandButton action="#{cartManagedBean.buy(userManagedBean.user.id)}" value="Buy"/>
+    </h:form>
+    
+    
+
+</h:body>
+
+</html>

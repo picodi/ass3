@@ -1,0 +1,6 @@
+/nbproject/*
+/dist/*
+/DVDEnterpriseApplication-war/nbproject/*
+/DVDEnterpriseApplication-ejb/nbproject/*
+/DVDEnterpriseApplication-war/build/*
+/DVDEnterpriseApplication-ejb/build/*
