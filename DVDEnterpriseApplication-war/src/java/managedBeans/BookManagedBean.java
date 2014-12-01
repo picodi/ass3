@@ -69,8 +69,8 @@ public class BookManagedBean {
             message = "Complete the fields!";
         } else {
             Book book = new Book();
-            book.setAuthor(author);
             book.setTitle(title);
+            book.setAuthor(author);
             book.setQuantity(quantity);
             book.setPrice(price);
             bookBean.addBook(book);
