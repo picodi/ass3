@@ -23,15 +23,32 @@
     </h:form>
 
     <h:outputLabel value="#{bookManagedBean.message}"/><br/><br/>
-
-    <h:form>
-        Title: <h:inputText value="#{bookManagedBean.title}"/><br/>
-        Author: <h:inputText value="#{bookManagedBean.author}"/><br/>
-        Quantity: <h:inputText value="#{bookManagedBean.quantity}"/><br/>
-        Price: <h:inputText value="#{bookManagedBean.price}"/><br/>
-        <h:commandButton value="Add Book" action="#{bookManagedBean.add}"/>
-    </h:form>
-
+    <form action="NewServlet">
+        <table>
+        Your message: 
+        <input type="text" name="message" value="" size="50"/>
+        <tr>
+            <td>Title</td>
+            <td><input type="text" name="title" value="#{bookManagedBean.title}" /></td>
+        </tr>
+        <tr>
+            <td>Author: </td>
+            <td><input type="text" name="author" value="#{bookManagedBean.author}"/></td>
+        </tr>
+        <tr>
+            <td>Quantity: </td>
+            <td><input type="text" name="quantity" value="#{bookManagedBean.quantity}"/></td>
+        </tr>
+        <tr>
+            <td>Price: </td>
+            <td><input type="text" name="price" value="#{bookManagedBean.price}"/></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="submit" value="Add Book"/></td>
+        </tr>
+        </table>
+    </form>
     <h2>Go to your <h:link outcome="adminView" value="admin page"> </h:link></h2>
 
 </h:body>

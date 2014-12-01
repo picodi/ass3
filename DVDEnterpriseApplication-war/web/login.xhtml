@@ -27,9 +27,20 @@ and open the template in the editor.
     </h:form>
     
     <h:form rendered="#{userManagedBean.user==null}">
-        Username: <h:inputText value="#{userManagedBean.username}"/> <br/>
-        Password: <h:inputSecret value="#{userManagedBean.password}"/> <br/>
-        <h:commandButton value="Login" action="#{userManagedBean.login}"/>
+        <table>
+            <tr>
+                <td>Username: </td>
+                <td><h:inputText value="#{userManagedBean.username}"/></td>
+            </tr>
+            <tr>
+                <td>Password: </td>
+                <td><h:inputSecret value="#{userManagedBean.password}"/></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><h:commandButton value="Login" action="#{userManagedBean.login}"/></td>
+            </tr>
+        </table>
     </h:form>
     <br/><br/>
     <h2><h:link outcome="register" value="Sign Up"/></h2>

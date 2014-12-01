@@ -73,6 +73,11 @@ public class UserManagedBean implements Serializable{
         }
     }
     
+    public void messages(String message)
+    {
+    
+    }
+    
     public String logOut(){
         user = null;
         message = null;
