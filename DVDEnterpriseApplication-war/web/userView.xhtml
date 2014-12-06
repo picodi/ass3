@@ -54,7 +54,7 @@
             </h:column>
             <h:column>
                 <f:facet name="header">Buy</f:facet>
-                <h:commandButton value="buy" action="#{cartManagedBean.add(bo.id, userManagedBean.user.id)}">  </h:commandButton>
+                <h:commandButton value="buy" action="#{cartManagedBean.add(bo.id, userManagedBean.user.id, cartManagedBean.quantity)}">  </h:commandButton>
             </h:column>
         </h:dataTable>
     </h:form>

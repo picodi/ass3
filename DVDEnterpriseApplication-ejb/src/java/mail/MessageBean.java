@@ -5,9 +5,12 @@
  */
 package mail;
 
+import com.sun.mail.smtp.SMTPTransport;
 import entites.Book;
 import entites.User;
+import java.security.Security;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +18,6 @@ import javax.ejb.ActivationConfigProperty;
 import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
 import javax.jms.JMSException;
-import javax.jms.MapMessage;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
@@ -23,9 +25,8 @@ import javax.mail.*;
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import sessionBeans.BookSessionBean;
 import sessionBeans.BookSessionBeanLocal;
-import sessionBeans.UserSessionBean;
+import sessionBeans.UserSessionBeanLocal;
 
 /**
  *
@@ -36,16 +37,11 @@ import sessionBeans.UserSessionBean;
     @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "jms/dest")
 })
 public class MessageBean implements MessageListener {
-    
-    String smtpServer = "smtp.gmail.com";
-    String subject = "New Book";
-    String subjectF = "Fayul";
-    String bodyF = "Something went wrong";
-    String from = "test@test.test";
-    String to = "dpicos@pitechnologies.ro";
-    
+        
     @EJB(beanName="BookSessionBean")
     BookSessionBeanLocal bookSessionBean;
+    @EJB(beanName="UserSessionBean")
+    UserSessionBeanLocal userSessionBean;
     
     public MessageBean() {
     }
@@ -71,7 +67,7 @@ public class MessageBean implements MessageListener {
             
             Book book;
             try {
-                
+                String subject = "New Book";
                 body = "New book added: " + title + " by " + author + "! price: " + price;
                 
                 System.out.println(body);
@@ -84,67 +80,78 @@ public class MessageBean implements MessageListener {
                 book.setPrice(price);
                 
                 bookSessionBean.addBook(book);
-            //    sendEmail(smtpServer, to, from, subject, body);
-            } catch(javax.naming.NamingException e) {
-                e.printStackTrace();
+                ArrayList<String> emails = getEmails();
+                for (String email : emails) {
+                    System.out.println(email);
+                    send("dpicos@pitechnologies.ro", "itchiban92@", email, "", subject, body);
+                }
+                
             } catch( Exception e) {
-            //    sendEmail(smtpServer, to, from, subjectF, bodyF);
+                e.printStackTrace();
             }
-            
-        } else {
-            return;
         }
     }
-    /*
-    public void sendEmail(String smtpServer, String to2, String from2, String subject, String body)
-    {
-      String to = "abcd@gmail.com";
-      String from = "dpicos@pitechnologies.ro";
-      String host = "localhost";
-      Properties properties = System.getProperties();
-      properties.setProperty("mail.smtp.host", host);
-      Session session = Session.getDefaultInstance(properties);
+    
+    public void send(String username, String password, String recipientEmail, String ccEmail, String title, String message) {
+        Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+        final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
 
-      try{
-            // Create a default MimeMessage object.
-            MimeMessage message = new MimeMessage(session);
+        // Get a Properties object
+        Properties props = System.getProperties();
+        props.setProperty("mail.smtps.host", "smtp.gmail.com");
+        props.setProperty("mail.smtp.socketFactory.class", SSL_FACTORY);
+        props.setProperty("mail.smtp.socketFactory.fallback", "false");
+        props.setProperty("mail.smtp.port", "465");
+        props.setProperty("mail.smtp.socketFactory.port", "465");
+        props.setProperty("mail.smtps.auth", "true");
 
-            // Set From: header field of the header.
-            message.setFrom(new InternetAddress(from));
+        /*
+        If set to false, the QUIT command is sent and the connection is immediately closed. If set 
+        to true (the default), causes the transport to wait for the response to the QUIT command.
 
-            // Set To: header field of the header.
-            message.addRecipient(RecipientType.TO, new InternetAddress(to));
+        ref :   http://java.sun.com/products/javamail/javadocs/com/sun/mail/smtp/package-summary.html
+                http://forum.java.sun.com/thread.jspa?threadID=5205249
+                smtpsend.java - demo program from javamail
+        */
+        props.put("mail.smtps.quitwait", "false");
 
-            // Set Subject: header field
-            message.setSubject("This is the Subject Line!");
+        Session session = Session.getInstance(props, null);
 
-            // Now set the actual message
-            message.setText("This is actual message");
+        // -- Create a new message --
+        final MimeMessage msg = new MimeMessage(session);
 
-            Transport.send(message);
-            System.out.println("Sent message successfully....");
-        }catch (MessagingException mex) {
-         mex.printStackTrace();
-      }
+        try {
+            // -- Set the FROM and TO fields --
+            msg.setFrom(new InternetAddress(username));
+            msg.setRecipients(RecipientType.TO, InternetAddress.parse(recipientEmail, false));
+            if (ccEmail.length() > 0) {
+                msg.setRecipients(RecipientType.CC, InternetAddress.parse(ccEmail, false));
+            }
+            msg.setSubject(title);
+            msg.setText(message, "utf-8");
+            msg.setSentDate(new Date());
+            SMTPTransport t = (SMTPTransport)session.getTransport("smtps");
+
+            t.connect("smtp.gmail.com", username, password);
+            t.sendMessage(msg, msg.getAllRecipients());
+            t.close();
+        } catch (MessagingException ex) {
+            Logger.getLogger(MessageBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+      
     }
-    */
     
     public ArrayList<String> getEmails()
     {
         ArrayList<String> emails = new ArrayList<>();
-    /*    UserSessionBean userSessionBean;
-        try {
-            javax.naming.Context c = new javax.naming.InitialContext();
-            userSessionBean = (UserSessionBean)c.lookup(BookSessionBean.class.getName());
-            for (User user : userSessionBean.getAllUsers()) {
-                if (user.getEmail().compareTo("") != 0) {
-                    emails.add(user.getEmail());
-                }
+        userSessionBean.getAllUsers();
+        for (User user : userSessionBean.getAllUsers()) {
+            if (user.getEmail().compareTo("") != 0) {
+                emails.add(user.getEmail());
             }
-        } catch(javax.naming.NamingException e) {
-                e.printStackTrace();
         }
-       */ 
         return emails;
     }
     

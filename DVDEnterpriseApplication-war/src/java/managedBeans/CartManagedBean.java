@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import sessionBeans.BookSessionBeanLocal;
 import sessionBeans.CartSessionBeanLocal;
@@ -69,13 +68,13 @@ public class CartManagedBean {
         loadCart(userId);
     }
     
-    public String add(int bookId, int userId){
+    public String add(int bookId, int userId, String qty){
         Cart cart = cartBean.getActiveCart(userId, bookId);
         if(cart == null){
             cart = new Cart();
             cart.setBookId(bookId);
-            cart.setQuantity(quantity);
-            quantity = 1;
+            System.out.print(qty);
+            cart.setQuantity(Integer.parseInt(qty));
             cart.setUserId(userId);
             cart.setConfirmed(NOT_CONFIRMED);
             cartBean.addCart(cart);

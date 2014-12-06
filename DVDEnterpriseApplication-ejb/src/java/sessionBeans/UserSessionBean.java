@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
  *
  * @author user
  */
-@Stateless
+@Stateless(name="UserSessionBean")
 public class UserSessionBean implements UserSessionBeanLocal 
 {
     // Add business logic below. (Right-click in editor and choose
@@ -49,7 +49,7 @@ public class UserSessionBean implements UserSessionBeanLocal
 
     @Override
     public List<User> getAllUsers() {
-        return em.createNamedQuery("User.getAllUsers").getResultList();
+        return em.createNamedQuery("User.findAll").getResultList();
     }
 
     @Override

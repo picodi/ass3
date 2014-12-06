@@ -88,7 +88,7 @@ public class UserManagedBean implements Serializable{
         if(user == null || user.getRole() != ADMIN_ROLE) {
             FacesContext.getCurrentInstance().getExternalContext().redirect("login.xhtml");
         }
-    }
+    }    
     
     
     public String getMessage() {
