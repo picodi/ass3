@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
  *
  * @author user
  */
-@Stateless
+@Stateless(name="BookSessionBean")
 public class BookSessionBean implements BookSessionBeanLocal {
 
     @PersistenceContext(unitName = "DVDEnterpriseApplication-ejbPU")
